@@ -2,6 +2,7 @@ Good Resources:
 
 SUPER KEY
 https://randallhelms.substack.com/p/how-i-wrote-an-api-connector-in-r
+https://r4ds.hadley.nz/rectangling.html
 
 
 https://httr2.r-lib.org
@@ -19,3 +20,5 @@ https://stackoverflow.com/questions/17198658/how-to-parse-an-xml-file-to-an-r-da
 
 Notes Completed:
 1. https://www.youtube.com/watch?v=iiADhChRriM
+2. https://www.youtube.com/watch?v=KeLiQXqVgMI
+3. https://xml2.r-lib.org

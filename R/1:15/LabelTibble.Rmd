@@ -1,0 +1,33 @@
+---
+title: "LabelTibble"
+output: pdf_document
+date: "2026-01-16"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(xml2)
+```
+
+Bringing in the xml file with all record labels info and converting it to a tidy tibble
+Shout out https://r4ds.hadley.nz/rectangling.html
+and https://xml2.r-lib.org/index.html
+```{r}
+#read in xml file
+labelsxml <- read_xml("/Users/jakehinz/Documents/GitHub/Discogs_Data_Analysis/discogs_20260101_labels.xml")
+
+#convert to list then tibble
+labels_tidy_tibble <- labelsxml |> as_list() |> as_tibble() |> unnest_wider(labels) |>
+  select(id, name, profile, parentLabel, contactinfo, data_quality) |>
+  unnest_wider(id, names_sep = "_") |> unnest_wider(name, names_sep = "_") |> unnest_wider(contactinfo, names_sep = "_") |>
+  unnest_wider(profile, names_sep = "_") |> unnest_wider(data_quality, names_sep = "_") |>
+  unnest_wider(parentLabel, names_sep = "_")
+```
+
+
+
+```{r}
+test_set <- labelsxml |> as_list() |> as_tibble() |> unnest_wider(labels) |> unnest_wider(id, names_sep = "_") |> filter(id_1 < 100)
+```
+
