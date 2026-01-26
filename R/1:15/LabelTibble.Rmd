@@ -25,9 +25,41 @@ labels_tidy_tibble <- labelsxml |> as_list() |> as_tibble() |> unnest_wider(labe
   unnest_wider(parentLabel, names_sep = "_")
 ```
 
-
-
+Creating smaller dataset to test ideas on
 ```{r}
-test_set <- labelsxml |> as_list() |> as_tibble() |> unnest_wider(labels) |> unnest_wider(id, names_sep = "_") |> filter(id_1 < 100)
+test_set <- labels_tidy_tibble |> head(1000)
 ```
+
+Fixing column names, converting types
+```{r}
+#column names
+labels_tidy_tibble <- labels_tidy_tibble |> rename("id" = "id_1", "name" = "name_1", "profile" = "profile_1", "parentLabel" = "parentLabel_1", "contactInfo" = "contactinfo_1", "dataQuality" = "data_quality_1")
+
+#types
+labels_tidy_tibble$dataQuality <- as_factor(labels_tidy_tibble$dataQuality)
+labels_tidy_tibble <- labels_tidy_tibble %>% mutate(id = as.numeric(id))
+```
+
+Exploratory data analysis
+```{r}
+ggplot(data = labels_tidy_tibble, mapping = aes(x = dataQuality)) +
+  geom_bar()
+
+labels_tidy_tibble <- labels_tidy_tibble %>% mutate(subLabel = is.na(parentLabel) == FALSE)
+ggplot(data = labels_tidy_tibble, mapping = aes(x = subLabel)) +
+  geom_bar()
+
+labels_tidy_tibble <- labels_tidy_tibble %>% mutate(profileLength = str_length(profile))
+labels_tidy_tibble <- labels_tidy_tibble %>% mutate(profileLength = ifelse(is.na(profile), 0, profileLength))
+ggplot(data = labels_tidy_tibble, mapping = aes(x = dataQuality, y = log(profileLength+1))) +
+  geom_boxplot()
+
+#longest profile length
+labels_tidy_tibble %>% filter(profileLength == 23183)
+```
+
+
+
+
+
 
