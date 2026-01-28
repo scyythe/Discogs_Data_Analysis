@@ -3,6 +3,8 @@ Good Resources:
 SUPER KEY
 https://randallhelms.substack.com/p/how-i-wrote-an-api-connector-in-r
 https://r4ds.hadley.nz/rectangling.html
+https://blog.djnavarro.net/posts/2022-08-23_visualising-a-billion-rows/
+https://www.trivialproblems.com/posts/incremental-xml-parsing-with-python/
 
 
 https://httr2.r-lib.org
@@ -15,6 +17,9 @@ https://www.opencodez.com/how-to-guide/how-to-use-xpath-for-web-scraping-with-r.
 https://rvest.tidyverse.org
 https://www.w3.org/TR/xpath-31/
 https://stackoverflow.com/questions/17198658/how-to-parse-an-xml-file-to-an-r-data-frame
+https://www.andrewheiss.com/blog/2022/06/23/long-labels-ggplot/
+https://stackoverflow.com/questions/16090869/how-can-i-pretty-print-xml-content-from-the-command-line
+
 
 
 
@@ -22,3 +27,7 @@ Notes Completed:
 1. https://www.youtube.com/watch?v=iiADhChRriM
 2. https://www.youtube.com/watch?v=KeLiQXqVgMI
 3. https://xml2.r-lib.org
+4. https://r4ds.hadley.nz/strings.html
+5. https://stringr.tidyverse.org
+6. https://dept.stat.lsa.umich.edu/~jerrick/courses/stat506_f24/07-sql.html
+7. https://docs.python.org/3/library/xml.etree.elementtree.html
