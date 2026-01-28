@@ -27,7 +27,8 @@ labels_tidy_tibble <- labelsxml |> as_list() |> as_tibble() |> unnest_wider(labe
 
 Creating smaller dataset to test ideas on
 ```{r}
-test_set <- labels_tidy_tibble |> head(1000)
+set.seed(152)
+test_set <- labels_tidy_tibble %>% sample_n(25000)
 ```
 
 Fixing column names, converting types
@@ -47,22 +48,30 @@ ggplot(data = labels_tidy_tibble, mapping = aes(x = dataQuality)) +
   geom_bar()
 
 #subLabel counts
-labels_tidy_tibble <- labels_tidy_tibble %>% mutate(subLabel = is.na(parentLabel) == FALSE)
+labels_tidy_tibble <- labels_tidy_tibble %>% mutate(subLabel = ifelse(is.na(parentLabel) == TRUE, 0, 1))
 ggplot(data = labels_tidy_tibble, mapping = aes(x = subLabel)) +
   geom_bar()
 
 #log(profileLength) ~ dataQuality
 labels_tidy_tibble <- labels_tidy_tibble %>% mutate(profileLength = str_length(profile))
-labels_tidy_tibble <- labels_tidy_tibble %>% mutate(profileLength = ifelse(is.na(profile), 0, profileLength))
+labels_tidy_tibble <- labels_tidy_tibble %>% mutate(profileLength = ifelse(is.na(profile), 1, profileLength))
 ggplot(data = labels_tidy_tibble, mapping = aes(x = dataQuality, y = log(profileLength+1))) +
   geom_boxplot()
 
 #longest profile length
 labels_tidy_tibble %>% filter(profileLength == 23183)
 
-#
-labels_tidy_tibble %>% ggplot(mapping = aes(x = log(profileLength+1), y = subLabel)) +
+#Predicting subLabel by profileLength
+labels_tidy_tibble %>% ggplot(mapping = aes(x = log(profileLength), y = ifelse(subLabel==1, TRUE, FALSE))) +
   geom_boxplot()
+
+labels_tidy_tibble <- labels_tidy_tibble %>% mutate(logProfileLength = log(profileLength))
+
+model1 <- glm(subLabel ~ logProfileLength, family=binomial, data=labels_tidy_tibble)
+summary(model1)
+
+ggplot(test_set, mapping = aes(x = logProfileLength, y = subLabel)) + geom_jitter(width = 0.3, height = 0.4) +
+      stat_smooth(method="glm", color="green", se=FALSE, method.args = list(family=binomial))
 ```
 
 
@@ -87,10 +96,47 @@ xmllint --format /Users/jakehinz/Documents/GitHub/Discogs_Data_Analysis/snippet.
 
 Iterating over xml
 Shout out https://www.trivialproblems.com/posts/incremental-xml-parsing-with-python/
+https://stackoverflow.com/questions/12792998/elementtree-iterparse-strategy
 ```{python}
 import xml.etree.ElementTree as ET
 
 iter = ET.iterparse("/Users/jakehinz/Documents/GitHub/Discogs_Data_Analysis/discogs_20260101_masters.xml", events=["start", "end"])
+x = 0
+path = []
+# allArtists = []
+for event, elem in iter:
+  text = elem.text
+  tag = elem.tag
+  #creating path list
+  if event == 'start':
+    path.append(tag)
+  elif event == 'end':
+    path.pop()
+
+  if 'videos' in path:
+    continue
+        
+  print(event)
+  print(text)
+  print(tag)
+  
+  if tag == "main_release" and event == "start":
+    releaseID = text
+    
+  # if "artists" in path:
+  #  if tag == 'id' and event == 'start':
+  #    currentArtist = []
+  #    currentArtist.append(elem.text)
+  #  if tag == 'name' and event == 'start':
+  #    currentArtist.append(elem.text)
+  #    allArtists.append(currentArtist)
+  
+  print()
+  print(releaseID)
+  print()
+  x = x+1
+  if x==200:
+    break
 ```
 
 
